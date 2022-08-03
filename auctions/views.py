@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -61,3 +62,12 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+class create(forms.Form):
+    pass
+
+def create(request):
+    if request.method == "GET":
+        return render(request, "auctions/create.html", {
+            'form': create()
+        })
