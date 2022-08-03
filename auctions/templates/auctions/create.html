@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'auctions/layout.html' %}
 
 
 {% block body %}
@@ -7,7 +7,33 @@
     </div>
     <div>
         <form action="{% url 'create' %}" method="post">
-            {{form}}
+            <div>
+                {{formListing.title.label_tag}}
+                {{formListing.title}}
+            </div>
+            <div>
+                {{formListing.description.label_tag}}
+            </div>
+            <div>
+                {{formListing.description}}
+            </div>
+            <div>
+                {{formListing.image.label_tag}}
+                {{formListing.image}}
+            </div>
+            <div>
+                {{formListing.category.label_tag}}
+                {{formListing.category}}
+            </div>
+            <div>
+                {{formBid.bid.label_tag}}
+                {{formBid.bid}}
+            </div>
+            <div>
+                {{formListing.title.label_tag}}
+                {{formListing.title}}
+            </div>
+            <input type="submit" value="Create Listing">
         </form>
     </div>
 

@@ -1,3 +1,4 @@
+from attr import field
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -5,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, listing, bid, category
 
 
 def index(request):
@@ -63,11 +64,25 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-class create(forms.Form):
-    pass
+class createListing(forms.ModelForm):
+    class Meta:
+        model = listing
+        fields = ['title', 'description', 'image', 'category']
+        widgets = {
+            'image': forms.URLInput(attrs={
+                'placeholder': "Image's url",
+            })
+        }
+
+class createBid(forms.ModelForm):
+    class Meta:
+        model = bid
+        fields = ['bid']
+        labels = {'bid': ('Starting Price')}
 
 def create(request):
     if request.method == "GET":
         return render(request, "auctions/create.html", {
-            'form': create()
+            'formListing': createListing(),
+            'formBid': createBid(),
         })
