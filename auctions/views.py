@@ -1,6 +1,7 @@
 from attr import field
 from django import forms
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -24,6 +25,10 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
+
+            #Assignment expressions
+            if (next := request.POST.get('next')) is not None:
+                return HttpResponseRedirect(next)
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "auctions/login.html", {
@@ -80,12 +85,14 @@ class createBid(forms.ModelForm):
         fields = ['bid']
         labels = {'bid': ('Starting Price')}
 
+@login_required
 def create(request):
     if request.method == "GET":
         return render(request, "auctions/create.html", {
             'formListing': createListing(),
             'formBid': createBid(),
+            'user': request.user.username
         })
 
     #If request is POST:
-    
+
