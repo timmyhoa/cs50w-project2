@@ -7,6 +7,7 @@
     </div>
     <div>
         <form action="{% url 'create' %}" method="post">
+            {% csrf_token %}
             <div>
                 {{formListing.title.label_tag}}
                 {{formListing.title}}
@@ -28,10 +29,6 @@
             <div>
                 {{formBid.bid.label_tag}}
                 {{formBid.bid}}
-            </div>
-            <div>
-                {{formListing.title.label_tag}}
-                {{formListing.title}}
             </div>
             <input type="submit" value="Create Listing">
         </form>

@@ -86,3 +86,6 @@ def create(request):
             'formListing': createListing(),
             'formBid': createBid(),
         })
+
+    #If request is POST:
+    
