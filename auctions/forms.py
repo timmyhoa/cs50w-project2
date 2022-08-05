@@ -2,8 +2,6 @@ from .models import *
 from django import forms
 
 
-
-
 class createListing(forms.ModelForm):
     class Meta:
         model = listing
