@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -91,8 +91,19 @@ def create(request):
         return render(request, "auctions/create.html", {
             'formListing': createListing(),
             'formBid': createBid(),
-            'user': request.user.username
         })
-
+    
     #If request is POST:
+    listingForm = createListing(request.POST)
+    bidForm = createBid(request.POST)
+    if listingForm.is_valid() and bidForm.is_valid():
+        listingModel = listingForm.save(commit=False)
+        listingModel.user = request.user
+        listingModel.save()
+        bidModel = bidForm.save(commit=False)
+        bidModel.user = request.user
+        bidModel.listing = listingModel
+        bidModel.save()
+        return HttpResponseRedirect(reverse('index'))
+    return HttpResponseBadRequest()
 
