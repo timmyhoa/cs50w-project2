@@ -1,5 +1,4 @@
 from attr import field
-from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -8,6 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, listing, bid, category
+from .forms import *
 
 
 def index(request):
@@ -27,7 +27,7 @@ def login_view(request):
             login(request, user)
 
             #Assignment expressions
-            if (next := request.POST.get('next')) is not None:
+            if (next := request.POST.get('next')):
                 return HttpResponseRedirect(next)
             return HttpResponseRedirect(reverse("index"))
         else:
@@ -69,21 +69,6 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-class createListing(forms.ModelForm):
-    class Meta:
-        model = listing
-        fields = ['title', 'description', 'image', 'category']
-        widgets = {
-            'image': forms.URLInput(attrs={
-                'placeholder': "Image's url",
-            })
-        }
-
-class createBid(forms.ModelForm):
-    class Meta:
-        model = bid
-        fields = ['bid']
-        labels = {'bid': ('Starting Price')}
 
 @login_required
 def create(request):
