@@ -102,12 +102,27 @@ def showListing(request, id):
             'listing': currentListing,
             'comments': comment.objects.filter(listing=currentListing),
             'createComment': createComment(),
+            'createBid': createBid(),
         })
     
     if 'closeListing' in request.POST:
         currentListing.active = False
         currentListing.save()
         return HttpResponseRedirect(reverse('index'))
+
+    if 'addBid' in request.POST:
+        newBid = createBid(request.POST)
+        if newBid.is_valid():
+            newBid = newBid.save(commit=False)
+        else:
+            return HttpResponseBadRequest("Invalid Bid")
+        if newBid.bid > currentListing.bid.last().bid:
+            newBid.listing = currentListing
+            newBid.user = request.user
+            newBid.save()
+            return HttpResponseRedirect(request.path)
+        else:
+            return HttpResponseBadRequest("Invalid Bid")
 
     newComment = createComment(request.POST)
     if newComment.is_valid():
