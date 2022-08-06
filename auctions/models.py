@@ -1,4 +1,5 @@
 from pydoc import describe
+from tkinter import CASCADE
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.forms import CharField
@@ -35,4 +36,13 @@ class bid(models.Model):
 
     def __str__(self) -> str:
         return f"{self.listing} : {self.bid}"
+
+class comment(models.Model):
+    comment = models.CharField(max_length=500)
+    listing = models.ForeignKey(listing, on_delete=models.CASCADE, related_name= "comment")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name= "comment")
+    time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'{self.user}: {self.listing}: {self.time}'
         

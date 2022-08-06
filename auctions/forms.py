@@ -17,3 +17,11 @@ class createBid(forms.ModelForm):
         model = bid
         fields = ['bid']
         labels = {'bid': ('Starting Price')}
+
+class createComment(forms.ModelForm):
+    class Meta:
+        model = comment
+        fields = ['comment']
+        widgets = {
+            'comment': forms.Textarea(),
+        }

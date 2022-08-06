@@ -1,7 +1,35 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h1>test</h1>
+<h1>{{listing.title}}</h1>
+<img src="{{listing.image}}" alt="Product's Image" id="showListingPic">
+<div class="mb-3">
+    <h4>Description:</h4>
+    {{listing.description}}
+</div>
+<div class="mb-3">
+    <label class="h4">Category: </label>
+    {{listing.category}}
+</div>
+<div class="mb-3">
+    <label class="h4">Price:</label>
+    {{listing.bid.get.bid}}$
+</div>
+<hr>
+
+<h3>Comments:</h3>
+{% if user.is_authenticated %}
+    <div>
+        <form action="{{request.path}}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ createComment.comment }}
+            </div>
+            <input type="submit" value="Add Comment" class="btn btn-primary">
+        </form>
+    </div>
+{% endif %}
+
 
 
 {% endblock %}

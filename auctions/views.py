@@ -96,4 +96,18 @@ def create(request):
     return HttpResponseBadRequest()
 
 def showListing(request, id):
-    return render(request, "auctions/showListing.html")
+    if request.method == "GET":
+        currentListing = listing.objects.get(pk=id)
+        return render(request, "auctions/showListing.html", {
+            'listing': currentListing,
+            'comments': comment.objects.filter(listing=currentListing),
+            'createComment': createComment(),
+        })
+    
+    newComment = createComment(request.POST)
+    if newComment.is_valid():
+        newComment = newComment.save(commit=False)
+        newComment.user = request.user
+        newComment.listing = listing.objects.get(pk=id)
+        newComment.save()
+        return HttpResponseRedirect(request.path)
