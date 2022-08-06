@@ -12,7 +12,7 @@ from .forms import *
 
 def index(request):
     return render(request, "auctions/index.html", {
-        'listings': listing.objects.all(),
+        'listings': listing.objects.filter(active=True),
 
     })
 
@@ -96,18 +96,23 @@ def create(request):
     return HttpResponseBadRequest()
 
 def showListing(request, id):
+    currentListing = listing.objects.get(pk=id)
     if request.method == "GET":
-        currentListing = listing.objects.get(pk=id)
         return render(request, "auctions/showListing.html", {
             'listing': currentListing,
             'comments': comment.objects.filter(listing=currentListing),
             'createComment': createComment(),
         })
     
+    if 'closeListing' in request.POST:
+        currentListing.active = False
+        currentListing.save()
+        return HttpResponseRedirect(reverse('index'))
+
     newComment = createComment(request.POST)
     if newComment.is_valid():
         newComment = newComment.save(commit=False)
         newComment.user = request.user
-        newComment.listing = listing.objects.get(pk=id)
+        newComment.listing = currentListing
         newComment.save()
         return HttpResponseRedirect(request.path)
