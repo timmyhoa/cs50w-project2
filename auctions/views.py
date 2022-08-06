@@ -95,3 +95,5 @@ def create(request):
         return HttpResponseRedirect(reverse('index'))
     return HttpResponseBadRequest()
 
+def showListing(request, id):
+    return render(request, "auctions/showListing.html")

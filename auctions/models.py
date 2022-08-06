@@ -15,6 +15,7 @@ class category(models.Model):
         return self.category
 
 class listing(models.Model):
+    active = models.BooleanField(default=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
     image = models.URLField(blank=True)
