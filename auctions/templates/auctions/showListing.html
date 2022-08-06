@@ -28,7 +28,7 @@
         <div class="mb-3">
             {{createBid.bid}}
             <input type="hidden" name="addBid">
-            <input type="submit" value="Add Bid">
+            <input type="submit" value="Add Bid" class="btn btn-primary" id="addBid">
         </div>
     </form>
 {% endif %}
@@ -51,6 +51,7 @@
 <div class="card mb-3">
     <div class="card-body">
       <h5 class="card-title">{{comment.user.username}}</h5>
+      <p class="card-text"><small>{{comment.time}}</small></p>
       <p class="card-text">{{comment.comment}}</p>
     </div>
   </div>

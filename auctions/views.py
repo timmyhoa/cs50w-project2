@@ -100,7 +100,7 @@ def showListing(request, id):
     if request.method == "GET":
         return render(request, "auctions/showListing.html", {
             'listing': currentListing,
-            'comments': comment.objects.filter(listing=currentListing),
+            'comments': comment.objects.filter(listing=currentListing)[::-1],
             'createComment': createComment(),
             'createBid': createBid(),
         })

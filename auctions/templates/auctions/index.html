@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <h4 class="card-title">{{listing.title}}</h4>
                         <p class="card-text">{{listing.description}}</p>
-                        <h6 class="card-title">{{listing.bid.get.bid}}$</h6>
+                        <h6 class="card-title">{{listing.bid.last.bid}}$</h6>
                         <a href="{% url 'showListing' listing.id %}" class="btn btn-primary">Visit Listing</a>
                     </div>
                 </div>
