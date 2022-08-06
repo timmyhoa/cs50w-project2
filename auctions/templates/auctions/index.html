@@ -2,14 +2,26 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
-    {% for listing in listings %}
-        <div>
-            {{listing.title}}
-            {{listing.description}}
-            {{listing.bid.get.bid}}
-            {{listing.image}}
-        </div>
-    {% endfor %}
+        <div class="row">
+        {% for listing in listings %}
+            <div class="col-sm-4">
+                <div class="card mb-3">
+                    {% if listing.image %}
+                        <img class="card-img-top img-fluid" src="{{listing.image}}" alt="Picture of the Listing">
+                    {% else %}
+                        <img class="card-img-top img-fluid" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="Card image cap">
+                    {% endif %}
+                    <div class="card-body">
+                        <h4 class="card-title">{{listing.title}}</h4>
+                        <p class="card-text">{{listing.description}}</p>
+                        <h6 class="card-title">{{listing.bid.get.bid}}$</h6>
+                        <a href="#" class="btn btn-primary">Visit Listing</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <h3>No listing available right now. Check again later</h3>
+        {% endfor %}
+    </div>
 
 {% endblock %}
