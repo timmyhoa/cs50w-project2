@@ -1,5 +1,5 @@
 # cs50w-project2
-Implementing a ebay-like website with the implementation of django, specifically, in django models and mitigration.
+Implementing a ebay-like website with the implementation of django, specifically, with the manipulating of Django's model.
 
 
 ## Things to add if have time
