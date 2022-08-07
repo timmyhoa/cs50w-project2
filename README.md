@@ -6,3 +6,4 @@ Implementing an ebay-like website with the implementation of django, specificall
 - Implement notification on wishlist 
 - Show bid history
 - Customizing Django's widgets so that every input field has bootstrap's class 
+- Adding item into watch list without refreshing the page 
