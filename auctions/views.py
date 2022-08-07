@@ -97,16 +97,11 @@ def create(request):
 
 def showListing(request, id):
     currentListing = listing.objects.get(pk=id)
-    if currentListing in request.user.watchList.all():
-        watchList = True
-    else:
-        watchList = False
     return render(request, "auctions/showListing.html", {
         'listing': currentListing,
         'comments': comment.objects.filter(listing=currentListing)[::-1],
         'createComment': createComment(),
         'createBid': createBid(),
-        'watchList': watchList
     })
 
 
