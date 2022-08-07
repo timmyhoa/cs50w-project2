@@ -1,9 +1,20 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if not show and listing.bid.last.user.id == user.id %}
+        <div class="alert alert-success mb-3" >
+            <h2>Congrats! You have won this listing</h2>
+        </div>
+        
+    {% elif not show %}
+        <div class="alert alert-warning mb-3" >
+            <h2>The listing has been closed</h2>
+        </div>
+    {% endif %}
+
     <h1>{{listing.title}}</h1>
     <div class="mb-3">
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and show %}
             <form action="{{request.path}}/addWatchList" method="post">
                 {% csrf_token %}
                 {% if listing not in request.user.watchList.all %}
@@ -34,12 +45,12 @@
         {{listing.bid.last.bid}}$
     </div>
 
-    {% if user.id == listing.user.id %}
+    {% if user.id == listing.user.id and show %}
         <form action="{{request.path}}/closeListing" method="post">
             {% csrf_token %}
             <input type="submit" class="btn btn-primary" value="Close this Listing">
         </form>
-    {% elif user.is_authenticated %}
+    {% elif user.is_authenticated and show %}
         <form action="{{request.path}}/addBid" method="post">
             {% csrf_token %}
             <div class="mb-3">
@@ -51,7 +62,7 @@
 
     <hr>
     <h3>Comments:</h3>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and show %}
         <div>
             <form action="{{request.path}}/newComment" method="post">
                 {% csrf_token %}

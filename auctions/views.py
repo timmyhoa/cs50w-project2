@@ -97,11 +97,16 @@ def create(request):
 
 def showListing(request, id):
     currentListing = listing.objects.get(pk=id)
+    if not currentListing.active:
+        show = False
+    else:
+        show = True
     return render(request, "auctions/showListing.html", {
         'listing': currentListing,
         'comments': comment.objects.filter(listing=currentListing)[::-1],
         'createComment': createComment(),
         'createBid': createBid(),
+        'show': show,
     })
 
 
@@ -109,10 +114,9 @@ def closeListing(request, id):
     if request.method == "GET":
         return HttpResponseForbidden("Not allowed")
     currentListing = listing.objects.get(pk=id)
-    if 'closeListing' in request.POST:
-        currentListing.active = False
-        currentListing.save()
-        return HttpResponseRedirect(reverse('index'))
+    currentListing.active = False
+    currentListing.save()
+    return HttpResponseRedirect(reverse('index'))
 
 def addBid(request, id):
     currentListing = listing.objects.get(pk=id)
@@ -148,10 +152,10 @@ def addWatchList(request, id):
     if request.POST['watchList'] == 'add':
         request.user.watchList.add(currentListing)
         request.user.save()
-        print(request.user.watchList.all())
         return HttpResponseRedirect(reverse('showListing', args=[currentListing.id]))
     else:
         request.user.watchList.remove(currentListing)
         request.user.save()
-        print(request.user.watchList.all())
         return HttpResponseRedirect(reverse('showListing', args=[currentListing.id]))
+
+
