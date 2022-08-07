@@ -147,3 +147,16 @@ def newComment(request, id):
         return HttpResponseRedirect(reverse('showListing', args=[currentListing.pk]))
     else:
         return HttpResponseBadRequest("Please enter a valid comment")
+
+def addWatchList(request, id):
+    currentListing = listing.objects.get(pk=id)
+    if request.POST['watchList'] == 'add':
+        request.user.watchList.add(currentListing)
+        request.user.save()
+        print(request.user.watchList.all())
+        return HttpResponseRedirect(reverse('showListing', args=[currentListing.id]))
+    else:
+        request.user.watchList.remove(currentListing)
+        request.user.save()
+        print(request.user.watchList.all())
+        return HttpResponseRedirect(reverse('showListing', args=[currentListing.id]))

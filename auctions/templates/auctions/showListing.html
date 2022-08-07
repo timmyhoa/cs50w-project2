@@ -3,13 +3,13 @@
 {% block body %}
     <h1>{{listing.title}}</h1>
     <div class="mb-3">
-        <form action="{{request.path}}" method="post">
+        <form action="{{request.path}}/addWatchList" method="post">
             {% csrf_token %}
             {% if not watchList %}
-                <input type="hidden" name="watchList" value="True">
+                <input type="hidden" name="watchList" value="add">
                 <input type="submit" value="Add to watchList" class="btn btn-primary">
             {% else %}
-                <input type="hidden" name="watchList" value="True">
+                <input type="hidden" name="watchList" value="remove">
                 <input type="submit" value="Remove from watchList" class="btn btn-primary">
             {% endif %}
         </form>
