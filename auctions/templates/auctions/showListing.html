@@ -1,60 +1,74 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h1>{{listing.title}}</h1>
-<img src="{{listing.image}}" alt="Product's Image" id="showListingPic">
-<div class="mb-3">
-    <h4>Description:</h4>
-    {{listing.description}}
-</div>
-<div class="mb-3">
-    <label class="h4">Category: </label>
-    {{listing.category}}
-</div>
-<div class="mb-3">
-    <label class="h4">Latest bid: </label>
-    {{listing.bid.last.bid}}$
-</div>
-
-{% if user.id == listing.user.id %}
-    <form action="{{request.path}}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="closeListing">
-        <input type="submit" class="btn btn-primary" value="Close this Listing">
-    </form>
-{% elif user.is_authenticated %}
-    <form action="{{request.path}}" method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{createBid.bid}}
-            <input type="hidden" name="addBid">
-            <input type="submit" value="Add Bid" class="btn btn-primary" id="addBid">
-        </div>
-    </form>
-{% endif %}
-
-<hr>
-<h3>Comments:</h3>
-{% if user.is_authenticated %}
-    <div>
+    <h1>{{listing.title}}</h1>
+    <div class="mb-3">
         <form action="{{request.path}}" method="post">
             {% csrf_token %}
-            <div class="mb-3">
-                {{ createComment.comment }}
-            </div>
-            <input type="submit" value="Add Comment" class="btn btn-primary mb-3">
+            {% if not watchList %}
+                <input type="hidden" name="watchList" value="True">
+                <input type="submit" value="Add to watchList" class="btn btn-primary">
+            {% else %}
+                <input type="hidden" name="watchList" value="True">
+                <input type="submit" value="Remove from watchList" class="btn btn-primary">
+            {% endif %}
         </form>
     </div>
-{% endif %}
-
-{% for comment in comments %}
-<div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">{{comment.user.username}}</h5>
-      <p class="card-text"><small>{{comment.time}}</small></p>
-      <p class="card-text">{{comment.comment}}</p>
+    {% if listing.image %}
+        <img src="{{listing.image}}" alt="Product's Image" id="showListingPic">
+    {% else %}
+        <img id="showListingPic" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="No Available Image">
+    {% endif %}
+    <div class="mb-3">
+        <h4>Description:</h4>
+        {{listing.description}}
     </div>
-  </div>
-{% endfor %}
+    <div class="mb-3">
+        <label class="h4">Category: </label>
+        {{listing.category}}
+    </div>
+    <div class="mb-3">
+        <label class="h4">Latest bid: </label>
+        {{listing.bid.last.bid}}$
+    </div>
+
+    {% if user.id == listing.user.id %}
+        <form action="{{request.path}}/closeListing" method="post">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="Close this Listing">
+        </form>
+    {% elif user.is_authenticated %}
+        <form action="{{request.path}}/addBid" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{createBid.bid}}
+                <input type="submit" value="Place Bid" class="btn btn-primary" id="addBid">
+            </div>
+        </form>
+    {% endif %}
+
+    <hr>
+    <h3>Comments:</h3>
+    {% if user.is_authenticated %}
+        <div>
+            <form action="{{request.path}}/newComment" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ createComment.comment }}
+                </div>
+                <input type="submit" value="Add Comment" class="btn btn-primary mb-3">
+            </form>
+        </div>
+    {% endif %}
+
+    {% for comment in comments %}
+    <div class="card mb-3">
+        <div class="card-body">
+        <h5 class="card-title">{{comment.user.username}}</h5>
+        <p class="card-text"><small>{{comment.time}}</small></p>
+        <p class="card-text">{{comment.comment}}</p>
+        </div>
+    </div>
+    {% endfor %}
 
 {% endblock %}

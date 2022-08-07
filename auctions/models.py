@@ -6,7 +6,7 @@ from django.forms import CharField
 
 
 class User(AbstractUser):
-    pass
+    watchList = models.ManyToManyField('listing', blank=True, related_name= "UserSave")
 
 class category(models.Model):
     category = models.CharField(max_length=40)

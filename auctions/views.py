@@ -2,7 +2,7 @@ from attr import field
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -97,37 +97,53 @@ def create(request):
 
 def showListing(request, id):
     currentListing = listing.objects.get(pk=id)
+    if currentListing in request.user.watchList.all():
+        watchList = True
+    else:
+        watchList = False
+    return render(request, "auctions/showListing.html", {
+        'listing': currentListing,
+        'comments': comment.objects.filter(listing=currentListing)[::-1],
+        'createComment': createComment(),
+        'createBid': createBid(),
+        'watchList': watchList
+    })
+
+
+def closeListing(request, id):
     if request.method == "GET":
-        return render(request, "auctions/showListing.html", {
-            'listing': currentListing,
-            'comments': comment.objects.filter(listing=currentListing)[::-1],
-            'createComment': createComment(),
-            'createBid': createBid(),
-        })
-    
+        return HttpResponseForbidden("Not allowed")
+    currentListing = listing.objects.get(pk=id)
     if 'closeListing' in request.POST:
         currentListing.active = False
         currentListing.save()
         return HttpResponseRedirect(reverse('index'))
 
-    if 'addBid' in request.POST:
-        newBid = createBid(request.POST)
-        if newBid.is_valid():
-            newBid = newBid.save(commit=False)
-        else:
-            return HttpResponseBadRequest("Invalid Bid")
-        if newBid.bid > currentListing.bid.last().bid:
-            newBid.listing = currentListing
-            newBid.user = request.user
-            newBid.save()
-            return HttpResponseRedirect(request.path)
-        else:
-            return HttpResponseBadRequest("Invalid Bid")
+def addBid(request, id):
+    currentListing = listing.objects.get(pk=id)
+    if request.method == "GET":
+        return HttpResponseForbidden("Not allowed")
+    newBid = createBid(request.POST)
+    if newBid.is_valid():
+        newBid = newBid.save(commit=False)
+    else:
+        return HttpResponseBadRequest("Invalid Bid")
+    if newBid.bid > currentListing.bid.last().bid:
+        newBid.listing = currentListing
+        newBid.user = request.user
+        newBid.save()
+        return HttpResponseRedirect(reverse('showListing', args=[currentListing.pk]))
+    else:
+        return HttpResponseBadRequest("Invalid Bid")
 
+def newComment(request, id):
+    currentListing = listing.objects.get(pk=id)
     newComment = createComment(request.POST)
     if newComment.is_valid():
         newComment = newComment.save(commit=False)
         newComment.user = request.user
         newComment.listing = currentListing
         newComment.save()
-        return HttpResponseRedirect(request.path)
+        return HttpResponseRedirect(reverse('showListing', args=[currentListing.pk]))
+    else:
+        return HttpResponseBadRequest("Please enter a valid comment")
