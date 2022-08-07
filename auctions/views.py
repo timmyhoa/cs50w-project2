@@ -12,8 +12,8 @@ from .forms import *
 
 def index(request):
     return render(request, "auctions/index.html", {
+        'title': "Active Listing",
         'listings': listing.objects.filter(active=True),
-
     })
 
 
@@ -158,4 +158,12 @@ def addWatchList(request, id):
         request.user.save()
         return HttpResponseRedirect(reverse('showListing', args=[currentListing.id]))
 
+@login_required
+def watchList(request):
+    return render(request, "auctions/index.html", {
+    'title': "Your Watch List",
+    'listings': request.user.watchList.all(),
+})
 
+def categories(request):
+    pass

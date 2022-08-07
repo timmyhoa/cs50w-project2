@@ -23,31 +23,37 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
                     </li>
+
                     {% if user.is_authenticated %}
+
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
+                    </li>
+
+                    {% endif %}
+                </ul>
+                {% if user.is_authenticated %}
+                    <ul class="navbar-nav ms-auto">      
                         <li class="nav-item active">
-                            <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
+                            <a class="nav-link" href="{% url 'watchList' %}">Watch List</a>
                         </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">      
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">{{user.username}}</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                </ul>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">{{user.username}}</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                    </ul>
                 {% else %}
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    </ul>
                 {% endif %}
-                </ul>
             </div>
         </nav>
         <div class="container">
