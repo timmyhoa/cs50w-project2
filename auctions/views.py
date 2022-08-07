@@ -166,4 +166,13 @@ def watchList(request):
 })
 
 def categories(request):
-    pass
+    return render(request, "auctions/categories.html", {
+        'categories': category.objects.all(),
+    })
+
+def showCategory(request, requestCategory):
+    currentCategory = category.objects.get(category=requestCategory)
+    return render(request, "auctions/index.html", {
+        'title': currentCategory.category,
+        'listings': currentCategory.listings.all(),
+    })
